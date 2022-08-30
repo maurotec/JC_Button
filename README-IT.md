@@ -14,15 +14,11 @@ You should have received a copy of the GNU General Public License along with thi
 ## Introduzione
 La libreria è pensata per leggere lo stato di un pulsante gestendo il rimbalzo dei contatti elettrici. È possibile rilevare la pressione prolungata di qualunque durata. Funziona bene in una macchina a stati finiti.  Usa la funzione `read()` per leggere lo stato di ogni pulsante, inserisci la chiamata a funzione `read()` all'interno della funzione `loop()` e assicurati venga eseguita più rapidamente possibile (es: ogni 5÷10ms).
 
-Il modo più semplice di usare un pulsante su una MCU AVR e di collegare il pulsante tra il pin e GND e
-abilitare la resistenza di pullup interna. Con questa configurazione è sufficiente chiamare il costruttore passando come argomento il pin a cui è collegato il pulsante. Per altre configurazioni il 
-costruttore prende altri 3 argomenti opzionali.
+Il modo più semplice di usare un pulsante su una MCU AVR e di collegare il pulsante tra il pin e GND e abilitare la resistenza di pullup interna. Con questa configurazione è sufficiente chiamare il costruttore passando come argomento il pin a cui è collegato il pulsante. Per altre configurazioni il costruttore prende altri 3 argomenti opzionali.
+### Esempio:
+	Button redBtn(5); // pulsante connesso tra pin 5 e GND
 
-## La classe ToggleButton()
-`ToggleButton()` è una classe derivata che implementa oggetti pulsanti sui quali vogliamo rilevare
-solo se il pulsante è premuto o no.
-
-## Examples
+## Esempi
 I seguenti sketch di esempio sono inclusi nella cartella `examples` inclusa nella libreria:
 
 - **SimpleOnOff**: Accende e spegne il pin 13 di arduino.
@@ -30,23 +26,28 @@ I seguenti sketch di esempio sono inclusi nella cartella `examples` inclusa nell
 - **UpDown**: Due pulsanti *UP* e *DOWN* permettono di incrementare/decrementare un contatore.
 - **Toggle**: Dimostra la classe `ToggleButton()`.
 
+## Costruttore Button()
 
-## Costruttore
+	Button(uint8_t pin, uint32_t dbTime=25, bool puEnable=true, bool invert=true)
+	
+La chiamata al costruttore crea istanza di tipo `Button`. Se il pulsante è connesso tra il pin e GND la chiamata al costruttore si semplifica come di seguito:
 
-### Button(pin, dbTime, puEnable, invert)
-##### Descrizione
-La chiamata al costruttore crea istanza di tipo `Button`.
-##### Sintassi
-`Button(pin, dbTime, puEnable, invert);`
-##### Argomenti richiesti
-**pin:** Il pin di Arduino board a cui è connesso il pulsante *(byte)*  
-##### Argomenti opzionali
-**dbTime:** Il tempo anti-rimbalzo espresso in millesimi di secodo (ms). Il valore predefinito è 25ms. *(unsigned long)*  
-**puEnable:** *true* per abilitare la pullup interna alla MCU, altrimenti *false*. Il valore predefinito è *true* quindi pullup abilitata. *(bool)*  
-**invert:** *false* un livello logico HIGH significa che il pulsante è premuto, *true* un livello logico LOW significa che il pulsant è premuto. *true* deve essere usato quando la pullup è presente, *false* quando si usa una resistenza di pulldown. Il valore predefinito è *true*. *(bool)*
-##### Restituisce
-Nulla.
-##### Esempio
+	Button redBtn(5); // pulsante connesso tra pin 5 e GND
+	
+### Significato degli argomenti
+	Button(pin, dbTime, puEnable, invert);
+#### Argomenti richiesti
+- **pin:** Il pin di Arduino board a cui è connesso il pulsante *(byte)*  
+#### Argomenti opzionali
+- **dbTime:** Il tempo anti-rimbalzo espresso in millesimi di secodo (ms). Il valore predefinito è 25ms. *(unsigned long)*  
+- **puEnable:** Il valore predefinito è *true* quindi pullup abilitata. *(bool)* 
+	- *true* abilita la pullup interna alla MCU.
+	- *false*. pullup non abilitata. Da usare con pullup esterne. 
+- **invert:** Il valore predefinito è *true*. *(bool)*
+	- *false* da usare con pulldown esterna. Un livello logico HIGH significa che il pulsante è premuto.
+	-  *true* da usare con pullup interna o esterna. Un livello logico LOW significa che il pulsant è premuto.
+
+### Esempio
 ```c++
 // Pulsante connesso tra pin 2 e GND, 25ms debounce, pullup enabled, logic inverted
 Button myButton(2);
@@ -56,9 +57,10 @@ Button myButton(3, 50);
 
 // Pulsante con resistore di pulldown esterno
 Button myButton(4, 25, false, false);
-
 ```
-
+## La classe ToggleButton()
+`ToggleButton()` è una classe derivata che implementa oggetti pulsanti sui quali vogliamo rilevare
+solo se il pulsante è stato premuto o no.
 ### ToggleButton(pin, initialState, dbTime, puEnable, invert)
 ##### Description
 The constructor defines a toggle button object, which has "push-on, push-off" functionality. The initial state can be on or off. See the section, [ToggleButton Library Functions](https://github.com/JChristensen/JC_Button#togglebutton-library-functions) for functions that apply specifically to the ToggleButton object. The ToggleButton class is derived from the Button class, so all Button functions are available, but because it is inherently a more limited concept, the special ToggleButton functions will be most useful, along with `begin()` and `read()`.
